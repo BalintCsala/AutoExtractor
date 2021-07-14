@@ -1,4 +1,6 @@
 .idea
 META-INF
 out
+tmp
 *.iml
+pack.zip

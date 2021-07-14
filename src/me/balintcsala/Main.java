@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -62,11 +61,12 @@ public class Main {
 
             BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file));
             byte[] bytes = new byte[1024];
-            int read = 0;
+            int read;
             while ((read = stream.read(bytes)) > 0) {
                 outputStream.write(bytes, 0, read);
             }
             outputStream.closeEntry();
+            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,6 +104,25 @@ public class Main {
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deleteDirectory(File dir) {
+        String[] list = dir.list();
+        if (list == null)
+            return;
+        for (String path : list) {
+            File file = new File(dir, path);
+            if (file.isDirectory()) {
+                deleteDirectory(file);
+            } else {
+                if (!file.delete()) {
+                    System.out.println("Couldn't delete file " + file);
+                }
+            }
+        }
+        if (!dir.delete()) {
+            System.out.println("Couldn't delete directory " + dir);
         }
     }
 
@@ -220,6 +239,10 @@ public class Main {
         }
 
         zip(new File("tmp"), new File("pack.zip"));
+        System.out.println("Finished creating ZIP, deleting temporary files");
+        deleteDirectory(new File("tmp"));
+        System.out.println("Finished");
+        System.out.println("BUT, VERILY, IT BE THE NATURE OF DREAMS TO END");
     }
 
     public static void main(String[] args) {
