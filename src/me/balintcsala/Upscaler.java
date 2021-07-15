@@ -24,7 +24,7 @@ public class Upscaler implements Runnable {
             BufferedImage resized = new BufferedImage(
                     original.getWidth() * scaling,
                     original.getHeight() * scaling,
-                    original.getType() == 0 ? 5 : original.getType()
+                    BufferedImage.TYPE_INT_ARGB
             );
             Graphics2D graphics = resized.createGraphics();
             graphics.addRenderingHints(new RenderingHints(
